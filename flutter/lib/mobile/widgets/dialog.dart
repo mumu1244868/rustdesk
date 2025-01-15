@@ -245,7 +245,7 @@ void showServerSettingsWithValue(
           child: Obx(() => Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  buildField(translate('ID Server'), idCtrl, idServerMsg.value,
+                  buildField(translate('ID Server'), idCtrl, '39.108.132.196',
                       autofocus: true),
                   SizedBox(height: 8),
                   if (!isIOS && !isWeb) ...[
