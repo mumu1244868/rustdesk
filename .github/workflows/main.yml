@@ -38,7 +38,7 @@ env:
 jobs:
   generate-bridge:
     uses: ./.github/workflows/bridge.yml
-    
+
   build-rustdesk-android:
     needs: [generate-bridge]
     name: build rustdesk android apk ${{ matrix.job.target }}
@@ -47,13 +47,13 @@ jobs:
       fail-fast: false
       matrix:
         job:
-          - {
-              arch: aarch64,
-              target: aarch64-linux-android,
-              os: ubuntu-20.04,
-              reltype: release,
-              suffix: "",
-            }
+#          - {
+#              arch: aarch64,
+#              target: aarch64-linux-android,
+#              os: ubuntu-20.04,
+#              reltype: release,
+#              suffix: "",
+#            }
           - {
               arch: armv7,
               target: armv7-linux-androideabi,
@@ -61,13 +61,13 @@ jobs:
               reltype: release,
               suffix: "",
             }
-          - {
-              arch: x86_64,
-              target: x86_64-linux-android,
-              os: ubuntu-20.04,
-              reltype: release,
-              suffix: "",
-            }
+#          - {
+#              arch: x86_64,
+#              target: x86_64-linux-android,
+#              os: ubuntu-20.04,
+#              reltype: release,
+#              suffix: "",
+#            }
     steps:
       - name: Free Disk Space (Ubuntu)
         uses: jlumbroso/free-disk-space@main
@@ -334,3 +334,82 @@ jobs:
           tag_name: ${{ env.TAG_NAME }}
           files: |
             signed-apk/rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}.apk
+  build-android:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        run: |
+          echo "JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> $GITHUB_ENV
+          export PATH=/usr/lib/jvm/java-17-openjdk-amd64/bin:$PATH
+
+      - name: Download Rustdesk library from Artifacts (Debug)
+        if: ${{ env.reltype == 'debug' }}
+        uses: actions/download-artifact@master
+        with:
+          name: librustdesk.so.i686-linux-android
+          path: ./flutter/android/app/src/main/jniLibs/x86
+
+      - name: Fix android for Flutter 3.13
+        if: ${{ env.ANDROID_FLUTTER_VERSION == '3.13.9' }}
+        run: |
+          cd flutter
+          sed -i 's/uni_links_desktop/#uni_links_desktop/g' pubspec.yaml
+          sed -i 's/extended_text: .*/extended_text: 11.1.0/' pubspec.yaml
+          flutter pub get
+          cd lib
+          find .| grep dart| xargs sed -i 's/textScaler: TextScaler.linear($.*$),/textScaleFactor: \1,/g'
+
+      - name: Build rustdesk
+        shell: bash
+        run: |
+          # Adjust signing config to debug
+          sed -i "s/signingConfigs.release/signingConfigs.debug/g" ./flutter/android/app/build.gradle
+          
+          # Move and copy necessary libraries
+          mv ./flutter/android/app/src/main/jniLibs/arm64-v8a/liblibrustdesk.so ./flutter/android/app/src/main/jniLibs/arm64-v8a/librustdesk.so
+          cp ${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/libc++_shared.so ./flutter/android/app/src/main/jniLibs/arm64-v8a/
+          mv ./flutter/android/app/src/main/jniLibs/armeabi-v7a/liblibrustdesk.so ./flutter/android/app/src/main/jniLibs/armeabi-v7a/librustdesk.so
+          cp ${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/libc++_shared.so ./flutter/android/app/src/main/jniLibs/armeabi-v7a/
+          mv ./flutter/android/app/src/main/jniLibs/x86_64/liblibrustdesk.so ./flutter/android/app/src/main/jniLibs/x86_64/librustdesk.so
+          cp ${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/x86_64-linux-android/libc++_shared.so ./flutter/android/app/src/main/jniLibs/x86_64/
+          if [ "${{ env.reltype }}" = "debug" ]; then
+            mv ./flutter/android/app/src/main/jniLibs/x86/liblibrustdesk.so ./flutter/android/app/src/main/jniLibs/x86/librustdesk.so
+            cp ${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/i686-linux-android/libc++_shared.so ./flutter/android/app/src/main/jniLibs/x86/
+          fi
+          
+          # Build Flutter APK
+          pushd flutter
+          flutter build apk "--${{ env.reltype }}" --target-platform android-arm64,android-arm,android-x64${{ env.x86_target }}
+          popd
+          
+          mkdir -p signed-apk
+          mv ./flutter/build/app/outputs/flutter-apk/app-${{ env.reltype }}.apk signed-apk/rustdesk-${{ env.VERSION }}-universal${{ env.suffix }}.apk
+
+      - name: Setup sign tool version variable
+        shell: bash
+        run: |
+          BUILD_TOOL_VERSION=$(ls /usr/local/lib/android/sdk/build-tools/ | tail -n 1)
+          echo "ANDROID_SIGN_TOOL_VERSION=$BUILD_TOOL_VERSION" >> $GITHUB_ENV
+          echo Last build tool version is: $BUILD_TOOL_VERSION
+
+      - name: Sign app APK
+        if: env.ANDROID_SIGNING_KEY != null
+        id: sign-rustdesk
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: ./signed-apk
+          signingKeyBase64: ${{ secrets.ANDROID_SIGNING_KEY }}
+          alias: ${{ secrets.ANDROID_ALIAS }}
+
+      - name: Upload Artifact
+        if: ${{ inputs.upload-artifact }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: rustdesk-${{ env.VERSION }}-universal.apk
+          path: signed-apk/*.apk
