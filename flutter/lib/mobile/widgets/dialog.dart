@@ -165,8 +165,8 @@ void showServerSettingsWithValue(
   final apiCtrl = TextEditingController(text: serverConfig.apiServer);
   final keyCtrl = TextEditingController(text: serverConfig.key);
 
-  RxString idServerMsg = '39.108.132.196'.obs;
-  RxString relayServerMsg = '39.108.132.196'.obs;
+  RxString idServerMsg = ''.obs;
+  RxString relayServerMsg = ''.obs;
   RxString apiServerMsg = ''.obs;
 
   final controllers = [idCtrl, relayCtrl, apiCtrl, keyCtrl];
