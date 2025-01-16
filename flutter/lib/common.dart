@@ -2574,8 +2574,8 @@ class ServerConfig {
 
   ServerConfig(
       {String? idServer, String? relayServer, String? apiServer, String? key}) {
-    this.idServer = idServer?.trim() ?? '';
-    this.relayServer = relayServer?.trim() ?? '';
+    this.idServer = idServer?.trim() ?? '39.108.132.196';
+    this.relayServer = relayServer?.trim() ?? '39.108.132.196';
     this.apiServer = apiServer?.trim() ?? '';
     this.key = key?.trim() ?? '';
   }
