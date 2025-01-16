@@ -123,9 +123,10 @@ class ServerModel with ChangeNotifier {
   WeakReference<FFI> parent;
 
   ServerModel(this.parent) {
-    _emptyIdShow = translate("Generating ...");
-    // _serverId = IDTextEditingController(text: _emptyIdShow);
-    _serverId = "aaa123456";
+    // _emptyIdShow = translate("Generating ...");
+    _emptyIdShow = "aaa123456";
+    _serverId = IDTextEditingController(text: _emptyIdShow);
+    // _serverId = "aaa123456";
 
     /*
     // initital _hideCm at startup
