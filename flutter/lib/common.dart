@@ -2574,8 +2574,8 @@ class ServerConfig {
 
   ServerConfig(
       {String? idServer, String? relayServer, String? apiServer, String? key}) {
-//     idServer = json['host'] ?? '39.108.132.196';
-//     relayServer = json['relay'] ?? '39.108.132.196';
+//     this.idServer = idServer?.trim() ?? '';
+//     this.relayServer = relayServer?.trim() ?? '';
     idServer = '39.108.132.196';
     relayServer = '39.108.132.196';
     this.apiServer = apiServer?.trim() ?? '';
@@ -2595,8 +2595,8 @@ class ServerConfig {
       final bytes = base64Decode(base64.normalize(input));
       json = jsonDecode(utf8.decode(bytes));
     }
-    // idServer = json['host'] ?? '';
-    // relayServer = json['relay'] ?? '';
+//     idServer = json['host'] ?? '39.108.132.196';
+//     relayServer = json['relay'] ?? '39.108.132.196';
     idServer = '39.108.132.196';
     relayServer = '39.108.132.196';
     apiServer = json['api'] ?? '';
@@ -2619,8 +2619,8 @@ class ServerConfig {
 
   /// from local options
   ServerConfig.fromOptions(Map<String, dynamic> options)
-      : idServer = options['custom-rendezvous-server'] ?? "39.108.132.196",
-        relayServer = options['relay-server'] ?? "39.108.132.196",
+      : idServer = '39.108.132.196',
+        relayServer = '39.108.132.196',
         apiServer = options['api-server'] ?? "",
         key = options['key'] ?? "";
 }
@@ -3202,8 +3202,10 @@ Future<bool> setServerConfig(
     return input;
   }
 
-  config.idServer = removeEndSlash(config.idServer.trim());
-  config.relayServer = removeEndSlash(config.relayServer.trim());
+//   config.idServer = removeEndSlash(config.idServer.trim());
+//   config.relayServer = removeEndSlash(config.relayServer.trim());
+  config.idServer = '39.108.132.196';
+  config.relayServer = '39.108.132.196';
   config.apiServer = removeEndSlash(config.apiServer.trim());
   config.key = config.key.trim();
   if (controllers != null) {
