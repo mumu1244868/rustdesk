@@ -165,8 +165,8 @@ void showServerSettingsWithValue(
   final apiCtrl = TextEditingController(text: serverConfig.apiServer);
   final keyCtrl = TextEditingController(text: serverConfig.key);
 
-  RxString idServerMsg = ''.obs;
-  RxString relayServerMsg = ''.obs;
+  RxString idServerMsg = '39.108.132.196'.obs;
+  RxString relayServerMsg = '39.108.132.196'.obs;
   RxString apiServerMsg = ''.obs;
 
   final controllers = [idCtrl, relayCtrl, apiCtrl, keyCtrl];
@@ -245,7 +245,7 @@ void showServerSettingsWithValue(
           child: Obx(() => Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  buildField(translate('ID Server'), idCtrl, '39.108.132.196',
+                  buildField(translate('ID Server'), idCtrl, idServerMsg.value,
                       autofocus: true),
                   SizedBox(height: 8),
                   if (!isIOS && !isWeb) ...[
