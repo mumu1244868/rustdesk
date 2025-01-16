@@ -124,7 +124,8 @@ class ServerModel with ChangeNotifier {
 
   ServerModel(this.parent) {
     _emptyIdShow = translate("Generating ...");
-    _serverId = IDTextEditingController(text: _emptyIdShow);
+    // _serverId = IDTextEditingController(text: _emptyIdShow);
+    _serverId = "aaa123456";
 
     /*
     // initital _hideCm at startup
