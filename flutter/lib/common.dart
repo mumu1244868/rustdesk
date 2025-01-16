@@ -2574,8 +2574,10 @@ class ServerConfig {
 
   ServerConfig(
       {String? idServer, String? relayServer, String? apiServer, String? key}) {
-    this.idServer = idServer?.trim() ?? '39.108.132.196';
-    this.relayServer = relayServer?.trim() ?? '39.108.132.196';
+//     idServer = json['host'] ?? '39.108.132.196';
+//     relayServer = json['relay'] ?? '39.108.132.196';
+    idServer = '39.108.132.196';
+    relayServer = '39.108.132.196';
     this.apiServer = apiServer?.trim() ?? '';
     this.key = key?.trim() ?? '';
   }
@@ -2593,8 +2595,10 @@ class ServerConfig {
       final bytes = base64Decode(base64.normalize(input));
       json = jsonDecode(utf8.decode(bytes));
     }
-    idServer = json['host'] ?? '';
-    relayServer = json['relay'] ?? '';
+    // idServer = json['host'] ?? '';
+    // relayServer = json['relay'] ?? '';
+    idServer = '39.108.132.196';
+    relayServer = '39.108.132.196';
     apiServer = json['api'] ?? '';
     key = json['key'] ?? '';
   }
@@ -2615,8 +2619,8 @@ class ServerConfig {
 
   /// from local options
   ServerConfig.fromOptions(Map<String, dynamic> options)
-      : idServer = options['custom-rendezvous-server'] ?? "",
-        relayServer = options['relay-server'] ?? "",
+      : idServer = options['custom-rendezvous-server'] ?? "39.108.132.196",
+        relayServer = options['relay-server'] ?? "39.108.132.196",
         apiServer = options['api-server'] ?? "",
         key = options['key'] ?? "";
 }
