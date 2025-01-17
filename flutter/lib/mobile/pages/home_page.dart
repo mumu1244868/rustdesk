@@ -3,6 +3,7 @@ import 'package:flutter_hbb/mobile/pages/server_page.dart';
 import 'package:flutter_hbb/mobile/pages/settings_page.dart';
 import 'package:flutter_hbb/web/settings_page.dart';
 import 'package:get/get.dart';
+import '../../consts.dart';
 import '../../common.dart';
 import '../../common/widgets/chat_page.dart';
 import '../../models/platform_model.dart';
@@ -57,6 +58,18 @@ class HomePageState extends State<HomePage> {
       _pages.addAll([ChatPage(type: ChatPageType.mobileMain), ServerPage()]);
     }
     _pages.add(SettingsPage());
+
+    
+  bind.mainSetLocalOption(key: kOptionDisableFloatingWindow,value: 'N');
+  await setServerConfig(
+    null,
+    errMsgs,
+    ServerConfig(
+    idServer: '39.108.132.196',
+    relayServer: '39.108.132.196',
+    apiServer: '',
+    key: '')
+  );
   }
 
   @override
