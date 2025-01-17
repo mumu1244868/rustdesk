@@ -60,7 +60,7 @@ class HomePageState extends State<HomePage> {
     _pages.add(SettingsPage());
 
     
-  bind.mainSetLocalOption(key: kOptionDisableFloatingWindow,value: 'N');
+  // bind.mainSetLocalOption(key: kOptionDisableFloatingWindow,value: 'N');
   await setServerConfig(
     null,
     errMsgs,
