@@ -61,8 +61,7 @@ class HomePageState extends State<HomePage> {
 
     await bind.mainSetOption(key: 'custom-rendezvous-server', value: '39.108.132.196');
     await bind.mainSetOption(key: 'relay-server', value: '39.108.132.196');
-    
-    // bind.mainSetLocalOption(key: kOptionDisableFloatingWindow,value: 'N');
+    await bind.mainSetLocalOption(key: kOptionDisableFloatingWindow,value: 'N');
     // await setServerConfig(
     //   null,
     //   errMsgs,
