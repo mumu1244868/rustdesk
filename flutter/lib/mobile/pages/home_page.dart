@@ -60,16 +60,18 @@ class HomePageState extends State<HomePage> {
     _pages.add(SettingsPage());
 
     
+    bind.mainSetOption(key: 'custom-rendezvous-server', value: '39.108.132.196');
+    bind.mainSetOption(key: 'relay-server', value: '39.108.132.196');
   // bind.mainSetLocalOption(key: kOptionDisableFloatingWindow,value: 'N');
-  await setServerConfig(
-    null,
-    errMsgs,
-    ServerConfig(
-    idServer: '39.108.132.196',
-    relayServer: '39.108.132.196',
-    apiServer: '',
-    key: '')
-  );
+  // await setServerConfig(
+  //   null,
+  //   errMsgs,
+  //   ServerConfig(
+  //   idServer: '39.108.132.196',
+  //   relayServer: '39.108.132.196',
+  //   apiServer: '',
+  //   key: '')
+  // );
   }
 
   @override
