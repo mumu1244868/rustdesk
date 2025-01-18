@@ -586,9 +586,9 @@ class _SettingsState extends State<SettingsPage> with WidgetsBindingObserver {
         }
       }
       final disable = !toValue;
-      bind.mainSetLocalOption(
-          key: kOptionDisableFloatingWindow,
-          value: disable ? 'Y' : defaultOptionNo);
+      // bind.mainSetLocalOption(
+      //     key: kOptionDisableFloatingWindow,
+      //     value: disable ? 'Y' : defaultOptionNo);
       setState(() => _floatingWindowDisabled = disable);
       gFFI.serverModel.androidUpdatekeepScreenOn();
     }
